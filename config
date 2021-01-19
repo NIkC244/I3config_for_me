@@ -41,15 +41,15 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec gnome-terminal
 
 # kill focused window
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec --no-startup-id dmenu_run
+#bindsym $mod+d exec --no-startup-id dmenu_run
 # A more modern dmenu replacement is rofi:
-# bindcode $mod+40 exec rofi -modi drun,run -show drun
+bindsym $mod+d exec --no-startup-id rofi -show run  
 # There also is i3-dmenu-desktop which only displays applications shipping a
 # .desktop file. It is a wrapper around dmenu, so you need that installed.
 #bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
@@ -179,33 +179,75 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 bar {
         status_command i3status
-        font pango:Font Awesome 5 Brands Regular 10
-        colors {
-    background #222222
-    statusline #FFFFFF
-    separator  #555555
+        font pango:Font Awesome 5 Brands Bold 10
+         colors {
+        background #2f343f
+        statusline #2f343f
+        separator #4b5262
 
-    focused_workspace  #FDC5F5 #F7AEF8 #FFFFFF
-    active_workspace   #FDC5F5 #FDC5F5 #FFFFFF
-    inactive_workspace #FDC5F5 #72DDF7 #555555
-    urgent_workspace   #FDC5F5 #8093F1 #FFFFFF
-    binding_mode       #FDC5F5 #B388EB #FFFFFF
+        # colour of border, background, and text
+        focused_workspace       #2f343f #bf616a #d8dee8
+        active_workspace        #2f343f #2f343f #d8dee8
+        inactive_workspace      #2f343f #2f343f #d8dee8
+        urgent_workspacei       #2f343f #ebcb8b #2f343f
           }
      }      
 
-# gaps
-for_window [class=".*"] border pixel 0
+### i3-gaps ###
+# Borders for windows
+for_window [class=".*"] border pixel 5
+
+# Gaps for i3bar
+for_window [class="i3bar"] gaps outer current set 10
+
+# Gaps
 gaps inner 10
-gaps outer 20
+gaps outer 4
 
-# class                 border  backgr. text    indicator child_border
-client.focused          #37474f #37474f #eeeeee #007a92   #007a92
-client.focused_inactive #272b33 #272b33 #eeeeee #484e50   #5f676a
-client.unfocused        #121315 #121315 #888888 #292d2e   #222222
-client.urgent           #ff2000 #ff2000 #eeeeee #ff775d   #ff775d
-client.placeholder      #333333 #121315 #eeeeee #121315   #0c0c0c
-
-client.background       #121315
+### Topbar and color theme ###
+# Color theme of borders
+client.focused              #bf616a #2f343f #d8dee8 #bf616a #d8dee8
+client.focused_inactive     #2f343f #2f343f #d8dee8 #2f343f #2f343f
+client.unfocused            #2f343f #2f343f #d8dee8 #2f343f #2f343f
+client.urgent               #2f343f #2f343f #d8dee8 #2f343f #2f343f
+client.placeholder          #2f343f #2f343f #d8dee8 #2f343f #2f343f
+client.background           #2f343f
 
 #Keyboard layouts
-exec_always "setxkbmap -model pc104 -layout us,ru -variant ,, -option grp:alt_shift_toggle"
+exec_always "setxkbmap -model pc104 -layout us,ru -variant ,, -option grp:alt_shift_toggle" 
+
+# Maximum width for floating windows
+floating_minimum_size 400 x 350
+floating_maximum_size 1800 x 900
+
+# (1366 - 10)/2 and (768 - 10)/2
+for_window [class=".*"] floating enable
+for_window [class=".*"] resize set 955 535
+for_window [class=".*"] focus
+
+# Press MOD key and click on mouse to move your window
+floating_modifier $mod
+
+# Focus doesn't follow the mouse
+focus_follows_mouse no
+
+# Resizing Windows
+bindsym $mod+Ctrl+h resize shrink width 10 px or 10 ppt
+bindsym $mod+Ctrl+j resize grow height 10 px or 10 ppt
+bindsym $mod+Ctrl+k resize shrink height 10 px or 10 ppt
+bindsym $mod+Ctrl+l resize grow width 10 px or 10 ppt
+
+# Autostart
+exec --no-startup-id nitrogen --restore
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec --no-startup-id xsettingsd &
+exec --no-startup-id compton -b
+exec --no-sarptup-id blueman-tray
+
+# Binding keys
+bindsym $mod+Shift+w exec --no-startup-id firefox
+bindsym $mod+Shift+n exec --no-startup-id nautilus
+
+# Brightness
+bindsym XF86MonBrightnessUp exec xbacklight -inc 20
+bindsym XF86MonBrightnessDown exec xbacklight -dec 20
